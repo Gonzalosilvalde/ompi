@@ -647,7 +647,13 @@ void mca_memheap_modex_recv_all(void)
 
         msg->unpack_ptr = (void *)((intptr_t) msg->base_ptr + rcv_offsets[i]);
 
+        char *pe_end_ptr = (char *)msg->unpack_ptr + rcv_size[i];
+
         for (j = 0; j < memheap_map->n_segments; j++) {
+            if ((char *)msg->unpack_ptr >= pe_end_ptr) {
+                break;
+            }
+
             map_segment_t *s;
 
             s = &memheap_map->mem_segs[j];
